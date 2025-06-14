@@ -17,21 +17,17 @@ const loveReasons = [
     "Your laugh - it's my favorite sound in the entire universe 🎵",
     "The way you hold my hand like you never want to let go 💕",
     "How you make me feel like the luckiest person alive every single day 🍀",
-    "Your beautiful eyes that see right into my soul 👁️‍🗨️",
-    "The way you scrunch your nose when you're thinking 😊",
-    "How you dance in the kitchen when you think no one's watching 💃",
-    "Your incredible kindness that makes everyone around you smile 🌸",
-    "The way you remember all the little things that matter to me 💭",
-    "How you make me want to be a better person every day 🌱",
-    "Your adorable morning voice that makes my heart flutter 🌅",
-    "The way you steal my hoodies and look better in them than I do 👕",
-    "How you always know exactly what to say when I need comfort 🤗",
-    "Your incredible strength that inspires me constantly 💪",
-    "The way you make me laugh until my stomach hurts 😂",
-    "How you love with your whole heart, completely and fearlessly ❤️",
+    "Your natural fragrance that drives me absolutely crazy, making my heart race every time you're near 🌹",
+    "The way you care about me so deeply but try to hide it behind that adorable shy smile 😊",
+    "How you chose me despite all the hurdles from family and social norms - your courage makes me fall in love with you more each day 💪",
+    "The way you trust me completely and encourage me to be my best self - you're my biggest supporter 💫",
+    "How perfectly you fit when you rest your head on my shoulder, like two puzzle pieces meant to be together 🤗",
+    "Your playful teasing that makes my heart skip a beat and brings that special smile to my face 😏",
+    "The way you annoy me and comfort me at the same time - only you can make that combination so perfect 💝",
     "Your beautiful dreams and the way you chase them with passion 🌙",
-    "The way you make every day feel like an adventure 🗺️",
-    "How perfectly you fit in my arms, like you were made for me 🤲"
+    "How perfectly you fit in my arms, like you were made for me 🤲",
+    "Your incredible strength that inspires me constantly 💪",
+    "How you love with your whole heart, completely and fearlessly ❤️"
 ];
 
 // Love quotes array
@@ -350,67 +346,60 @@ function startQuoteCarousel() {
 // Love Reasons Functionality
 function setupLoveReasons() {
     const reasonsCard = document.getElementById('reasonsCard');
-    if (reasonsCard) {
-        reasonsCard.addEventListener('click', showLoveReasons);
-    }
-}
-
-function showLoveReasons() {
-    const homeContent = document.querySelector('#home .love-dashboard, #home .quotes-section, #home .begin-story');
-    const loveReasonsSection = document.getElementById('loveReasons');
+    const loveReasons = document.getElementById('loveReasons');
+    const reasonText = document.getElementById('reasonText');
     
-    if (homeContent && loveReasonsSection) {
-        // Hide main home content
-        Array.from(homeContent).forEach(element => {
-            if (element) element.style.display = 'none';
+    if (!reasonsCard || !loveReasons || !reasonText) return;
+    
+    reasonsCard.addEventListener('click', () => {
+        // Hide all other content
+        document.querySelectorAll('.page-content').forEach(page => {
+            page.classList.remove('active');
         });
         
-        // Show love reasons section
-        loveReasonsSection.style.display = 'block';
-        loveReasonsSection.style.animation = 'fadeIn 0.8s ease-in';
+        // Show love reasons
+        loveReasons.style.display = 'block';
+        loveReasons.classList.add('active');
         
         // Show first reason
-        showNextReason();
-    }
+        currentReasonIndex = 0;
+        reasonText.textContent = loveReasons[currentReasonIndex];
+        reasonText.classList.add('show');
+        
+        // Add celebration effect
+        createCelebrationHearts();
+    });
 }
 
 function showNextReason() {
     const reasonText = document.getElementById('reasonText');
-    if (!reasonText || loveReasons.length === 0) return;
+    if (!reasonText) return;
     
-    // Fade out current text
+    // Hide current reason
     reasonText.classList.remove('show');
     
+    // Update to next reason
+    currentReasonIndex = (currentReasonIndex + 1) % loveReasons.length;
+    
+    // Show new reason with animation
     setTimeout(() => {
-        // Update text
-        reasonText.innerHTML = loveReasons[currentReasonIndex];
-        currentReasonIndex = (currentReasonIndex + 1) % loveReasons.length;
-        
-        // Fade in new text
+        reasonText.textContent = loveReasons[currentReasonIndex];
         reasonText.classList.add('show');
-        
-        // Create celebration hearts
-        createCelebrationHearts();
     }, 300);
 }
 
 function hideLoveReasons() {
-    const homeContent = document.querySelector('#home');
-    const loveReasonsSection = document.getElementById('loveReasons');
+    const loveReasons = document.getElementById('loveReasons');
+    const homePage = document.getElementById('home');
     
-    if (loveReasonsSection) {
-        loveReasonsSection.style.display = 'none';
-    }
+    if (!loveReasons || !homePage) return;
     
-    if (homeContent) {
-        const dashboard = homeContent.querySelector('.love-dashboard');
-        const quotes = homeContent.querySelector('.quotes-section');
-        const beginStory = homeContent.querySelector('.begin-story');
-        
-        if (dashboard) dashboard.style.display = 'grid';
-        if (quotes) quotes.style.display = 'block';
-        if (beginStory) beginStory.style.display = 'block';
-    }
+    // Hide love reasons
+    loveReasons.style.display = 'none';
+    loveReasons.classList.remove('active');
+    
+    // Show home page
+    homePage.classList.add('active');
 }
 
 function createCelebrationHearts() {
@@ -529,35 +518,33 @@ function animateVideoSection() {
 // Music Toggle
 function setupMusicToggle() {
     const musicToggle = document.getElementById('musicToggle');
-    if (!musicToggle) return;
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    let isMusicPlaying = false;
     
-    musicToggle.addEventListener('click', toggleMusic);
+    if (!musicToggle || !backgroundMusic) return;
     
-    // Initialize music (you can replace this URL with your own music file)
-    // Note: Due to browser policies, music won't autoplay - user must click
-    musicAudio = new Audio();
-    // musicAudio.src = 'path/to/your/romantic-music.mp3'; // Add your music file
-    musicAudio.loop = true;
-    musicAudio.volume = 0.3;
-}
-
-function toggleMusic() {
-    const musicToggle = document.getElementById('musicToggle');
-    const icon = musicToggle.querySelector('i');
+    // Set initial volume
+    backgroundMusic.volume = 0.5; // 50% volume
     
-    if (!musicAudio || !icon) return;
+    musicToggle.addEventListener('click', () => {
+        if (isMusicPlaying) {
+            backgroundMusic.pause();
+            musicToggle.innerHTML = '<i class="fas fa-play"></i>';
+        } else {
+            backgroundMusic.play();
+            musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+        isMusicPlaying = !isMusicPlaying;
+    });
     
-    if (CONFIG.musicEnabled) {
-        musicAudio.pause();
-        icon.className = 'fas fa-play';
-        CONFIG.musicEnabled = false;
-        musicToggle.style.background = 'rgba(255, 105, 180, 0.9)';
-    } else {
-        // musicAudio.play(); // Uncomment when you add music file
-        icon.className = 'fas fa-pause';
-        CONFIG.musicEnabled = true;
-        musicToggle.style.background = 'rgba(255, 69, 0, 0.9)';
-    }
+    // Add hover effect to music toggle
+    musicToggle.addEventListener('mouseenter', () => {
+        musicToggle.style.transform = 'scale(1.1)';
+    });
+    
+    musicToggle.addEventListener('mouseleave', () => {
+        musicToggle.style.transform = 'scale(1)';
+    });
 }
 
 // Event Listeners
